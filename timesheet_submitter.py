@@ -9,6 +9,7 @@ from functools import partial
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.common.keys import Keys
 
 ##########################################################
 
@@ -31,7 +32,6 @@ wait = lambda x: time.sleep(x)
 ##########################################################
 
 csv_file = ''
-job_number = 1
 raw_data = None
 
 # Time to get a file:
@@ -49,12 +49,6 @@ if not os.path.exists(file_name):
 with open(file_name, 'r', encoding='utf-8') as f:
     raw_data = f.readlines()
 
-# Determine job number, default to 1
-# NOTE This is indicative of the order not the actual job ID
-if len(sys.argv) < 3:
-    job_number = 1
-else:
-    job_number = sys.argv[2]
 
 ##########################################################
 # Helper functions
@@ -107,12 +101,12 @@ except:
 ##########################################################
 
 initial_url = 'https://uosp.ascenderpay.com/uosp-wss/faces/landing/SAMLLanding.jspx'
-
 driver.get(initial_url)
+
+
 print("Please Login")
-print("Once you have Logged in, Press Enter to Continue")
-while input() != '':
-    continue
+print("Once you have Logged in, and website loaded")
+input("Press Enter (in the terminal) to Continue")
 
 
 ##########################################################
@@ -141,27 +135,7 @@ start_date = min(
 
 # Start Date
 try_and_wait(partial(text_element, driver, '//*[@id="P_START_DATE"]', start_date), tries=5, wait_time=micro_sleep)
-try_and_wait(partial(text_element, driver, '//*[@id="P_CALENDAR_CODE"]', "CAL"), tries=5, wait_time=micro_sleep)
-try_and_wait(partial(click_element, driver, '/html/body/p[3]'), tries=5, wait_time=micro_sleep)
-
-
-# Select Job
-try_and_wait(partial(click_element, driver, f"/html/body/div/form/table/tbody/tr[{job_number}]/td[1]/input"),
-             tries=5, wait_time=micro_sleep)
-
-# Continue
-try:
-    # Needed because of
-    try_and_wait(partial(driver.find_element, "name", "Z_ACTION"), tries=5, wait_time=micro_sleep).click()
-except ValueError:
-    print("Error getting the job.")
-    exit()
-except:
-    print("Error getting job, please click yourself and continue.")
-    pass
-
-input("If continue isn't pressed, please click yourself.")
-
+try_and_wait(partial(text_element, driver, '//*[@id="P_START_DATE"]', Keys.ENTER), tries=5, wait_time=micro_sleep)
 
 ##########################################################
 # Fill in the timesheet
@@ -177,18 +151,41 @@ try_and_wait(partial(driver.switch_to.frame, 1), tries=5, wait_time=micro_sleep)
 n_rows = len(raw_data)
 if n_rows > 20:
     for _ in range(n_rows - 20):
-        try_and_wait(partial(click_element, driver, "/html/body/form/p[3]/input[5]"), tries=5, wait_time=micro_sleep)
+        try_and_wait(partial(click_element, driver, "/html/body/form/p[3]/input[3]"), tries=5, wait_time=micro_sleep)
 
+"""
+NOTE for the table layout of each row:
+td[1] : copy              :
+td[2] : delete
+td[3] : empty space
+td[4] : date               : P_WORK_DATE
+td[5] : day of the week
+td[6] : Unit of study       : P_UNIT_OF_STUDY
+td[7] : Paycode             : P_PAYCODE
+td[8] : Unit                : P_UNITS
+td[9] : empty space
+td[10]: required on site    : P_REQ_LOC_TICK
+td[11]: start time          : P_START_TIME
+td[12]: responsibilty code  : P_GL_OVERRIDE
+td[13]: project code        : P_GL_ACCOUNT
+td[14]: analysis code       : P_GL_SUB_ACCOUNT
+td[15]: topic               : P_TOPIC
+td[16]: topic details       : P_TOPIC_DETAILS
+td[17]: empty space
+td[18]: special leave       : P_SPEC_LV_TICK
+td[19]: empty space
+"""
 # Enter Data
 for i, entry in enumerate(raw_data):
     entry = entry.split(',')
+    print("Entering: ", entry)
 
     # Date
     element = try_and_wait(partial(driver.find_element, "xpath", f'''//*[@id="TSEntry"]/tr[{i + 1}]/td[4]'''), tries=5, wait_time=micro_sleep)
     field = try_and_wait(partial(element.find_element,"xpath", './*[@id="P_WORK_DATE"]'), tries=5, wait_time=micro_sleep)
     field.send_keys(entry[0])
 
-     # Hours
+    # Unit of Study
     element = try_and_wait(partial(driver.find_element, "xpath", '/html/body/form/table/tbody/tr[{}]/td[6]'.format(i + 1)),
                            tries=5, wait_time=micro_sleep)
     field = try_and_wait(partial(element.find_element, "xpath", './*[@id="P_UNIT_OF_STUDY"]'),
@@ -196,60 +193,62 @@ for i, entry in enumerate(raw_data):
     field.send_keys(entry[1])
 
     # Paycode
-    element = try_and_wait(partial(driver.find_element, "xpath", '/html/body/form/table/tbody/tr[{}]/td[7]'.format(i + 1)), tries=5, wait_time=micro_sleep)
-    field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_PAYCODE"]'), tries=5, wait_time=micro_sleep)
+    element = try_and_wait(partial(driver.find_element, "xpath", '/html/body/form/table/tbody/tr[{}]/td[7]'.format(i + 1)),
+                           tries=5, wait_time=micro_sleep)
+    field = try_and_wait(partial(element.find_element, "xpath", './*[@id="P_PAYCODE"]'),
+                         tries=5, wait_time=micro_sleep)
     field.send_keys(entry[2])
 
-    if len(entry) > 3:
-        # Analysis Code
-        if len(entry[3]) > 0:
-            try: # Because of pointless dialogue boxes
-                element = try_and_wait(partial(driver.find_element,"xpath",
-                '/html/body/form/table/tbody/tr[{}]/td[8]'.format(i + 1)), tries=5, wait_time=micro_sleep)
-                field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_UNITS"]'), tries=5, wait_time=micro_sleep)
-                field.send_keys(entry[3])
-            except:
-                pass
+    # Units
+    element = try_and_wait(partial(driver.find_element, "xpath", '/html/body/form/table/tbody/tr[{}]/td[8]'.format(i + 1)),
+                           tries=5, wait_time=micro_sleep)
+    field = try_and_wait(partial(element.find_element, "xpath", './*[@id="P_UNITS"]'),
+                         tries=5, wait_time=micro_sleep)
+    field.send_keys(entry[3])
 
-    if len(entry) > 4:
-        # Topic
-        if len(entry[4]) > 0:
-            try: # Because of pointless dialogue boxes
-                element = try_and_wait(partial(driver.find_element,"xpath",
-                '/html/body/form/table/tbody/tr[{}]/td[11]'.format(i + 1)), tries=5, wait_time=micro_sleep)
-                field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_GL_SUB_ACCOUNT"]'), tries=5, wait_time=micro_sleep)
-                field.send_keys(entry[4])
-            except: # This skips the dialogue boxes
-                pass
+    # Start time
+    element = try_and_wait(partial(driver.find_element, "xpath", '/html/body/form/table/tbody/tr[{}]/td[11]'.format(i + 1)),
+                           tries=5, wait_time=micro_sleep)
+    field = try_and_wait(partial(element.find_element, "xpath", './*[@id="P_START_TIME"]'),
+                         tries=5, wait_time=micro_sleep)
+    field.send_keys(entry[4])
+
 
     if len(entry) > 5:
-        # Details
-        if len(entry[5]) > 0:
-            try: # Because of pointless dialogue boxes
-                element = try_and_wait(partial(driver.find_element,"xpath",
-                '/html/body/form/table/tbody/tr[{}]/td[12]'.format(i + 1)), tries=5, wait_time=micro_sleep)
-                field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_TOPIC"]'), tries=5, wait_time=micro_sleep)
-                field.send_keys(entry[5])
-            except: # This skips the dialogue boxes
-                element = try_and_wait(partial(driver.find_element,"xpath",
-                '/html/body/form/table/tbody/tr[{}]/td[12]'.format(i + 1)), tries=5, wait_time=micro_sleep)
-                field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_TOPIC"]'), tries=5, wait_time=micro_sleep)
-                field.send_keys(entry[5])
+        # reqired on site
+        element = try_and_wait(partial(driver.find_element,"xpath",
+                '/html/body/form/table/tbody/tr[{}]/td[10]'.format(i + 1)), tries=5, wait_time=micro_sleep)
+        field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_REQ_LOC_TICK"]'), tries=5, wait_time=micro_sleep)
+
+        if (field.is_selected() != (entry[5] == "T")):
+            field.click()
 
     if len(entry) > 6:
-        # Details
+        # Analysis Code
         if len(entry[6]) > 0:
-            try: # Because of pointless dialogue boxes
-                element = try_and_wait(partial(driver.find_element,"xpath",
-                '/html/body/form/table/tbody/tr[{}]/td[13]'.format(i + 1)), tries=5, wait_time=micro_sleep)
-                field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_TOPIC_DETAILS"]'), tries=5, wait_time=micro_sleep)
-                field.send_keys(entry[6])
-            except:
-                pass
+            element = try_and_wait(partial(driver.find_element,"xpath",
+            '/html/body/form/table/tbody/tr[{}]/td[14]'.format(i + 1)), tries=5, wait_time=micro_sleep)
+            field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_GL_SUB_ACCOUNT"]'), tries=5, wait_time=micro_sleep)
+            field.send_keys(entry[6])
 
+    if len(entry) > 7:
+        # Topic
+        if len(entry[7]) > 0:
+            element = try_and_wait(partial(driver.find_element,"xpath",
+            '/html/body/form/table/tbody/tr[{}]/td[15]'.format(i + 1)), tries=5, wait_time=micro_sleep)
+            field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_TOPIC"]'), tries=5, wait_time=micro_sleep)
+            field.send_keys(entry[7])
+
+    if len(entry) > 8:
+        # Topic detail
+        if len(entry[8]) > 0:
+            element = try_and_wait(partial(driver.find_element,"xpath",
+            '/html/body/form/table/tbody/tr[{}]/td[16]'.format(i + 1)), tries=5, wait_time=micro_sleep)
+            field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_TOPIC_DETAILS"]'), tries=5, wait_time=micro_sleep)
+            field.send_keys(entry[8])
 
 
 # You get to enter the approver and press the button
 print("READY TO LODGE!")
 print("Don't forget to select your timesheet approver")
-input("Press enter to finish and close the browser window")
+input("Press enter to finish")
