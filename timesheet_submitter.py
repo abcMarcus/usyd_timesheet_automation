@@ -49,6 +49,7 @@ if not os.path.exists(file_name):
 with open(file_name, 'r', encoding='utf-8') as f:
     raw_data = f.readlines()
 
+raw_data = list(filter(str.strip, raw_data))
 
 ##########################################################
 # Helper functions
@@ -252,3 +253,4 @@ for i, entry in enumerate(raw_data):
 print("READY TO LODGE!")
 print("Don't forget to select your timesheet approver")
 input("Press enter to finish")
+
