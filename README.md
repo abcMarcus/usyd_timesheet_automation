@@ -29,7 +29,7 @@ NOTE: Make sure you do not include any `+`, `,` or `/` characters in your script
 The csv you provide should contain the following columns:
 
 ```
-DATE, Unit of study, Paycode, Units, Start Time, [Required on site], [Analysis Code], [Topic], [Topic details]
+DATE, Unit of study, Paycode, Units, Start Time, [Required on site], [responsibility code], [project code], [Analysis Code], [Topic], [Topic details]
 ```
 
 The script will not check if you have the correct topic; valid topics are probably only TUT and MRK anyway.

@@ -224,29 +224,40 @@ for i, entry in enumerate(raw_data):
         if (field.is_selected() != (entry[5] == "T")):
             field.click()
 
-    if len(entry) > 6:
+    if len(entry) > 6 and len(entry[6]):
+        # Responsibility code
+        element = try_and_wait(partial(driver.find_element,"xpath",
+        '/html/body/form/table/tbody/tr[{}]/td[12]'.format(i + 1)), tries=5, wait_time=micro_sleep)
+        field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_GL_OVERRIDE"]'), tries=5, wait_time=micro_sleep)
+        field.send_keys(entry[6])
+
+    if len(entry) > 7 and len(entry[7]):
+        # project code
+        element = try_and_wait(partial(driver.find_element,"xpath",
+        '/html/body/form/table/tbody/tr[{}]/td[13]'.format(i + 1)), tries=5, wait_time=micro_sleep)
+        field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_GL_ACCOUNT"]'), tries=5, wait_time=micro_sleep)
+        field.send_keys(entry[7])
+
+    if len(entry) > 8 and len(entry[8]):
         # Analysis Code
-        if len(entry[6]) > 0:
-            element = try_and_wait(partial(driver.find_element,"xpath",
-            '/html/body/form/table/tbody/tr[{}]/td[14]'.format(i + 1)), tries=5, wait_time=micro_sleep)
-            field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_GL_SUB_ACCOUNT"]'), tries=5, wait_time=micro_sleep)
-            field.send_keys(entry[6])
+        element = try_and_wait(partial(driver.find_element,"xpath",
+        '/html/body/form/table/tbody/tr[{}]/td[14]'.format(i + 1)), tries=5, wait_time=micro_sleep)
+        field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_GL_SUB_ACCOUNT"]'), tries=5, wait_time=micro_sleep)
+        field.send_keys(entry[8])
 
-    if len(entry) > 7:
+    if len(entry) > 9 and len(entry[9]):
         # Topic
-        if len(entry[7]) > 0:
-            element = try_and_wait(partial(driver.find_element,"xpath",
-            '/html/body/form/table/tbody/tr[{}]/td[15]'.format(i + 1)), tries=5, wait_time=micro_sleep)
-            field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_TOPIC"]'), tries=5, wait_time=micro_sleep)
-            field.send_keys(entry[7])
+        element = try_and_wait(partial(driver.find_element,"xpath",
+        '/html/body/form/table/tbody/tr[{}]/td[15]'.format(i + 1)), tries=5, wait_time=micro_sleep)
+        field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_TOPIC"]'), tries=5, wait_time=micro_sleep)
+        field.send_keys(entry[9])
 
-    if len(entry) > 8:
+    if len(entry) > 10 and len(entry[10]):
         # Topic detail
-        if len(entry[8]) > 0:
-            element = try_and_wait(partial(driver.find_element,"xpath",
-            '/html/body/form/table/tbody/tr[{}]/td[16]'.format(i + 1)), tries=5, wait_time=micro_sleep)
-            field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_TOPIC_DETAILS"]'), tries=5, wait_time=micro_sleep)
-            field.send_keys(entry[8])
+        element = try_and_wait(partial(driver.find_element,"xpath",
+        '/html/body/form/table/tbody/tr[{}]/td[16]'.format(i + 1)), tries=5, wait_time=micro_sleep)
+        field = try_and_wait(partial(element.find_element, "xpath",'./*[@id="P_TOPIC_DETAILS"]'), tries=5, wait_time=micro_sleep)
+        field.send_keys(entry[10])
 
 
 # You get to enter the approver and press the button
