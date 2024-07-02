@@ -1,4 +1,4 @@
-**forked from (Alan Robertson)[https://github.com/Alan-Robertson/usyd_timesheet_automation]**
+**forked from [Alan Robertson](https://github.com/Alan-Robertson/usyd_timesheet_automation)**
 
 forked to add update it to work for 2024 version of the site, and to add extra feature for my use cases.
 
