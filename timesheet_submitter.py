@@ -37,17 +37,18 @@ raw_data = None
 # Time to get a file:
 if len(sys.argv) < 2:
     print("Please provide a path to a properly formatted csv file containing your timesheet data.")
-    file_name = input()
+    file_names = [input()]
 else:
-    file_name = sys.argv[1]
+    file_names = sys.argv[1:]
 
-# Check if invalid
-if not os.path.exists(file_name):
-    raise ValueError("Cannot find file!")
+raw_data = []
+for file_name in file_names:
+    if not os.path.exists(file_name):
+        print("Cannot find file: " + file_name)
+        exit(-1)
 
-# Read the file contents
-with open(file_name, 'r', encoding='utf-8') as f:
-    raw_data = f.readlines()
+    with open(file_name, 'r', encoding='utf-8') as f:
+        raw_data += f.readlines()
 
 raw_data = list(filter(str.strip, raw_data))
 
