@@ -1,6 +1,10 @@
 **forked from [Alan Robertson](https://github.com/Alan-Robertson/usyd_timesheet_automation)**
 
-forked to add update it to work for 2024 version of the site, and to add extra feature for my use cases.
+> [!WARNING]
+> This latest update has a slightly different format than before. Look at the CSV format below and compare it to your csv, it might be configured for [this commit](https://github.com/abcMarcus/usyd_timesheet_automation/tree/e4077bd206cd97f77941990fabb43ec591c64ab6)
+
+
+## read below!
 
 ## Because Online Timesheet Submissions are a Pain ##
 
