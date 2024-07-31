@@ -1,5 +1,10 @@
 from typing import Callable
-import selenium
+try:
+    import selenium
+except ImportError:
+    print("Please install selenium using 'pip install selenium'")
+    exit(-1)
+
 import time
 import sys
 import csv
