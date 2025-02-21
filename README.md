@@ -34,3 +34,14 @@ Date should be in the format `dd/mm/yyyy` and start time should be in the format
 "Required on site" should be `Y` or `N` or empty.
 
 see `csvs/sample.csv`
+
+# next_timesheet.py
+The schedule for each week is more or less the same.
+Since timesheets are submitted every 2 weeks, this script will take in a timesheet,
+add 14 days to each date and output a new timesheet.
+
+**Example:**
+
+```bash
+python next_timesheet.py csvs/sample.csv  csvs/week_4.csv
+```
