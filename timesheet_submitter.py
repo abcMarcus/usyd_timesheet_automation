@@ -36,7 +36,11 @@ CSV_COLUMNS = {
 # Load CSV Entries
 ##########################################################
 
-file_names = [input()] if len(sys.argv) < 2 else sys.argv[1:]
+if len(sys.argv) < 2:
+    print("Enter csv path: ")
+    file_names = [input()]
+else:
+    file_names = sys.argv[1:]
 
 raw_data = []
 for file_name in file_names:
@@ -58,6 +62,8 @@ start_date = min(
 # moneyy
 ##########################################################
 
+# TODO: update this with the correct rates
+print("TODO: update this to real rate", __file__, "line", sys._getframe().f_lineno)
 RATES = {
     "TU2": 11.11,
     "TU4": 11.11,
