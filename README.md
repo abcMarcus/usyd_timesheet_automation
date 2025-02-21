@@ -1,12 +1,6 @@
 **forked from [Alan Robertson](https://github.com/Alan-Robertson/usyd_timesheet_automation)**
 
-> [!WARNING]
-> This latest update has a slightly different format than before. Look at the CSV format below and compare it to your csv, it might be configured for [this commit](https://github.com/abcMarcus/usyd_timesheet_automation/tree/e4077bd206cd97f77941990fabb43ec591c64ab6)
-
-
-## read below!
-
-## Because Online Timesheet Submissions are a Pain ##
+## Because Online Timesheet Submissions are a Pain
 
 My employer requires that we manually track and transcribe data from our own records of time worked into their online system. We are not paid for the time spent doing this, but without doing it we're not paid at all.
 
@@ -17,7 +11,7 @@ As a result this selenium script exists. It's very hard coded and very bare bone
 ## Usage ##
 
 ```bash
-python timesheet_submitter.py <csv file> [csv files]...
+python timesheet_submitter.py <csv file> [csv files ...]
 ```
 
 After running the script you'll be presented with the login page; do this yourself (so I don't have to touch your credentials) and press enter on the script once you've finished with this.
@@ -35,8 +29,8 @@ The csv you provide should contain the following columns:
 DATE, Unit of study, Paycode, Units, Start Time, [Required on site], [responsibility code], [project code], [Analysis Code], [Topic], [Topic details]
 ```
 
+Date should be in the format `dd/mm/yyyy` and start time should be in the format `hh:mm`.
+
+"Required on site" should be `Y` or `N` or empty.
+
 see `csvs/sample.csv`
-
-The script will not check if you have the correct topic; valid topics are probably only TUT and MRK anyway.
-
-Don't forget to enter your timesheet provider!
