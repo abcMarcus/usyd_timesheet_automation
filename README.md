@@ -39,7 +39,7 @@ NOTE: Make sure you do not include any `+`, `,` or `/` characters in your script
 ## Modes ##
 
 ### Auto Mode ###
-In auto mode, you will need to provide csv files as templates. The script will automatically add 7 days to your original date.Before filling the form, the csv file would be updated.
+In auto mode, you will need to provide csv files as templates. The script will automatically add 14 days to your original date.Before filling the form, the csv file would be updated.
 
 ### CSV Mode ###
 In CSV Mode, the script will only fill the form as what is in CSV file, and you can pass multiple CSV files as arguments.
