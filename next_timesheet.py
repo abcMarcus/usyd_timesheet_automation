@@ -12,7 +12,7 @@ def update_csv(path) -> str:
         for row in reader:
             if row:
                 original_date = datetime.strptime(row[0], "%d/%m/%Y")
-                new_date = original_date + timedelta(days=7)
+                new_date = original_date + timedelta(days=14)
                 row[0] = new_date.strftime("%d/%m/%Y")
                 writer.writerow(row)
             else:
