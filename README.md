@@ -8,6 +8,13 @@ The system itself has several bugs/flaws/surprise features which makes this a pa
 
 As a result this selenium script exists. It's very hard coded and very bare bones but it gets the job done.
 
+## WARNING: Security risk ##
+
+Please **DO NOT** put your credentials into the script. **DO NOT PUT THEM IN PLAIN TEXT**.
+You can use `input()` to make a prompt. But hardcording your credentials would make your account **VULNERABLE**.
+
+**IF YOU DO NOT KNOW HOW TO USE IT WITH PASSWORD MANAGER, OR A HARDWARE PASSKEY. DO NOT USE AUTOMATED LOGIN FEATURE**
+
 ## Usage ##
 
 ```bash
@@ -23,7 +30,7 @@ PASSWORD: <Your password>
 TOTP_SECRET: <Your TOTP secret key>
 ```
 
-If you don't have your TOTP secret, when 2FA is needed, you will be prompted to complete it manually. To do that, clear the field TOTP_SECRET, or do not set it at the first place.
+If you don't have your TOTP secret, when 2FA is needed, you will be prompted to complete it manually. To do that, clear the field TOTP_SECRET, or do not set it in the first place.
 
 After that the script should fill everything out until you need to enter your timesheet submitter and lodge. The script will not press the lodge button for you just to be sure.
 
@@ -32,7 +39,7 @@ NOTE: Make sure you do not include any `+`, `,` or `/` characters in your script
 ## Modes ##
 
 ### Auto Mode ###
-In auto mode, you will need to provide one single csv file as a template. The script will automatically add 7 days to your original date.Before filling the form, the csv file would be updated.
+In auto mode, you will need to provide csv files as templates. The script will automatically add 7 days to your original date.Before filling the form, the csv file would be updated.
 
 ### CSV Mode ###
 In CSV Mode, the script will only fill the form as what is in CSV file, and you can pass multiple CSV files as arguments.
