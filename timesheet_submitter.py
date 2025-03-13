@@ -229,7 +229,11 @@ WebDriverWait(driver, MAX_WAIT_TIME).until(
 wait_for_element("/html/body/p[2]/a").click()
 wait_for_element('//*[@id="P_START_DATE"]').send_keys(start_date + Keys.ENTER)
 
-wait_for_element("//input[@name='Z_ACTION' and @value='Continue']").click()
+try:
+    # if you dont have a timesheet this week, it will prompt you to auto fill.
+    wait_for_element("//input[@name='Z_ACTION' and @value='Continue']").click()
+except:
+    pass
 
 ##########################################################
 # Fill in the timesheet
