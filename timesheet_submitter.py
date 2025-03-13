@@ -40,7 +40,7 @@ if len(sys.argv) < 2:
     print("Enter csv path: ")
     file_names = [input()]
 else:
-    file_names = sys.argv[1:]
+    file_names = [input()] if len(sys.argv) < 2 else sys.argv[1:]
 
 raw_data = []
 for file_name in file_names:
@@ -90,9 +90,10 @@ print(f"Total pay: ${sum(each.values()):.2f}")
 # Topics
 
 TOPICS = {
-    "ACAD INTGY", "ADMIN", "LECTURE", "MARKING", "MEETING",
-    "PRACTICAL", "PREP", "SEMINAR", "TEACHING", "TRAINING",
-    "TUTORIAL", "UOSMAT DEV", "WORKSHOP"
+    "ACAD INTGY", "ADMIN", "MARKING", "MEETING",
+    "NON-C CLIN", "PRACTICAL", "PREP", "PRJ/RS SUP",
+    "REQ ATTNDN", "ST CONSULT", "ST RECRUIT", "COORD DUTY",
+    "TEACHING", "TRAINING", "UOSMAT DEV",
 }
 
 for row in raw_data:
@@ -159,6 +160,8 @@ WebDriverWait(driver, MAX_WAIT_TIME).until(
 
 wait_for_element("/html/body/p[2]/a").click()
 wait_for_element('//*[@id="P_START_DATE"]').send_keys(start_date + Keys.ENTER)
+
+wait_for_element("//input[@name='Z_ACTION' and @value='Continue']").click()
 
 ##########################################################
 # Fill in the timesheet
