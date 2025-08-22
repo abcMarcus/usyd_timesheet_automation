@@ -95,13 +95,12 @@ start_date = min(
 ##########################################################
 
 # TODO: update this with the correct rates
-print("TODO: update this to real rate", __file__, "line", sys._getframe().f_lineno)
 RATES = {
-    "TU2": 175.94,
-    "TU4": 117.29,
-    "A02": 58.32,
-    "M05": 58.32,
-    "DE2": 58.32,
+    "TU2": 182.54,
+    "TU4": 121.69,
+    "A02": 60.51,
+    "M05": 60.51,
+    "DE2": 60.51,
 }
 
 each = {}
