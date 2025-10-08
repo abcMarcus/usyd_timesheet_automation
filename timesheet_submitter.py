@@ -1,13 +1,11 @@
 import importlib.util
 import argparse
-import time
+from text_files import text_file_to_csv
 from totp import get_totp_token
 from next_timesheet import update_csv
 
 # Test and educational purpose only, do not fill in your login credentials
-UNIKEY = None
-PASSWORD = None
-TOTP_SECRET = None
+UNIKEY = PASSWORD = TOTP_SECRET = None
 
 if importlib.util.find_spec("selenium") is None:
     print("Please install selenium using 'pip install selenium'")
@@ -19,15 +17,16 @@ if importlib.util.find_spec("keyring"):
     PASSWORD = keyring.get_password("USYD-CREDENTIAL", "PASSWORD")
     TOTP_SECRET = keyring.get_password("USYD-CREDENTIAL", "TOTP_SECRET")
 
+import sys
+import time
+from pathlib import Path
+
 from selenium import webdriver
 from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
-import sys
-import os
-import time
 
 MAX_WAIT_TIME = 20
 
@@ -67,12 +66,18 @@ if namespace.mode not in ["csv", "auto"]:
 
 raw_data = []
 for file_name in namespace.files:
-    if not file_name.endswith(".csv"):
+    path = Path(file_name)
+    if path.suffix == ".txt":
+        print(f"[+] Converting {path} to CSV...")
+        path = text_file_to_csv(path, subject_code=path.stem)  
+        file_name = str(path)
+
+    if not path.suffix == ".csv":
         print(f"[-] Not a CSV file: {file_name}")
         parser.print_usage()
         exit(-1)
 
-    if not os.path.exists(file_name):
+    if not path.exists():
         print(f"[-] Cannot find file: {file_name}")
         parser.print_usage()
         exit(-1)
@@ -85,8 +90,9 @@ for file_name in namespace.files:
 
 raw_data = list(filter(str.strip, raw_data))
 
+dates = [line.split(",")[CSV_COLUMNS["date"]] for line in raw_data]
 start_date = min(
-    [line.split(",")[CSV_COLUMNS["date"]] for line in raw_data],
+    dates,
     key=lambda s: (lambda d: (int(d[2]), int(d[1]), int(d[0])))(s.split("/")),
 )
 
