@@ -58,6 +58,22 @@ Date should be in the format `dd/mm/yyyy` and start time should be in the format
 
 see `csvs/sample.csv`
 
+## Text Format ##
+
+Text files with simpler format:
+
+```
+20/4
+5:30pm (1.5)
+7pm (1.5)
+21/4
+9:50am (4)
+2pm (2.5)
+7pm (2)
+23/4
+6:40pm (2)
+```
+
 # next_timesheet.py
 The schedule for each week is more or less the same.
 Since timesheets are submitted every 2 weeks, this script will take in a timesheet,
