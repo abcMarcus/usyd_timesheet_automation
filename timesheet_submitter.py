@@ -96,11 +96,11 @@ start_date = min(
 
 # TODO: update this with the correct rates
 RATES = {
-    "TU2": 182.54,
-    "TU4": 121.69,
-    "A02": 60.51,
-    "M05": 60.51,
-    "DE2": 60.51,
+    "TU2": 189.84,
+    "TU4": 126.56,
+    "A02": 62.93,
+    "M05": 62.93,
+    "DE2": 62.93,
 }
 
 each = {}
